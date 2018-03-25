@@ -4,9 +4,9 @@ import os
 import argparse
 import collections
 import cPickle as pickle
+from read_credentials import readCredentials
 
-SSH = 'sshpass -p bala123 ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-SCP = 'sshpass -p bala123 scp -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+SSH, SCP = readCredentials("credentials.txt")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--num_workers", type=int, default=1)

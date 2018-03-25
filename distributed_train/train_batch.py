@@ -3,6 +3,10 @@ from termcolor import colored
 import os
 import cPickle as pickle
 import argparse
+from read_credentials import readCredentials
+
+SSH, SCP = readCredentials("credentials.txt")
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--start", type=int, default=1800)
@@ -10,9 +14,6 @@ parser.add_argument("--end", type=int, default=2009)
 
 args = parser.parse_args()
 
-
-SSH = 'sshpass -p bala123 ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-SCP = 'sshpass -p bala123 scp -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
 with open('good_hosts', 'r') as f:
     servers = [line.strip() for line in f.readlines()]

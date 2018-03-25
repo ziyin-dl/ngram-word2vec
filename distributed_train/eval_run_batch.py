@@ -1,9 +1,9 @@
 import subprocess
 from termcolor import colored
 import os
+from read_credentials import readCredentials
 
-SSH = 'sshpass -p bala123 ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-SCP = 'sshpass -p bala123 scp -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+SSH, SCP = readCredentials("credentials.txt")
 
 with open('good_hosts', 'r') as f:
     servers = [line.strip() for line in f.readlines()]

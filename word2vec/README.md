@@ -2,7 +2,17 @@ This is a skip-gram Word2Vec model that trains on ngram data. It is modified fro
 original tensorflow word2vec kernel, but the input takes a ngram file. Each line of the ngram input file
 is tab("\t") seperated, where the first part is the ngram, and the second part is the number of occurrences.
 The ngram file does not have to be of all the same size. It's valid, for example, to have mixed 3-grams and
-5-grams.
+5-grams. A sample input file is
+
+### ngram.txt
+```
+a quick brown \t 1
+fox jumps the lazy yellow \t 2
+blue cloud and white \t 5
+```
+
+A sample usage can be found
+[here](run.sh).
 
 This directory contains models for unsupervised training of word embeddings
 using the model described in:
@@ -15,15 +25,7 @@ tutorials. Brief instructions are below.
 
 * [Word2Vec Tutorial](http://tensorflow.org/tutorials/word2vec)
 
-Assuming you have cloned the git repository, navigate into this directory. To download the example text and evaluation data:
-
-```shell
-curl http://mattmahoney.net/dc/text8.zip > text8.zip
-unzip text8.zip
-curl https://storage.googleapis.com/google-code-archive-source/v2/code.google.com/word2vec/source-archive.zip > source-archive.zip
-unzip -p source-archive.zip  word2vec/trunk/questions-words.txt > questions-words.txt
-rm text8.zip source-archive.zip
-```
+You can get the google ngram data using scripts in ./scripts
 
 You will need to compile the ops as follows:
 
@@ -31,17 +33,6 @@ You will need to compile the ops as follows:
 TF_INC=$(python -c 'import tensorflow as tf; print(tf.sysconfig.get_include())')
 TF_LIB=$(python -c 'import tensorflow as tf; print(tf.sysconfig.get_lib())')
 g++ -std=c++11 -shared word2vec_ops.cc word2vec_kernels.cc -o word2vec_ops.so -fPIC -I $TF_INC -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -L$TF_LIB -ltensorflow_framework
-
-On Mac, add `-undefined dynamic_lookup` to the g++ command.
-
-(For an explanation of what this is doing, see the tutorial on [Adding a New Op to TensorFlow](https://www.tensorflow.org/how_tos/adding_an_op/#building_the_op_library). The flag `-D_GLIBCXX_USE_CXX11_ABI=0` is included to support newer versions of gcc. However, if you compiled TensorFlow from source using gcc 5 or later, you may need to exclude the flag.)
-Then run using:
-
-```shell
-python word2vec_optimized.py \
-  --train_data=text8 \
-  --eval_data=questions-words.txt \
-  --save_path=/tmp/
 ```
 
 Here is a short overview of what is in this directory.

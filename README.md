@@ -13,11 +13,14 @@ ICLR 2013.
 
 n-grams are co-occurrences of words in a corpus. For example, given a sentence "the quick brown fox jumps over the lazy dog",
 the 5-grams contained are
-the quick brown fox jumps 1
-quick brown fox jumps over  1
-brown fox jumps over the  1
-fox jumps over the lazy 1
-jumps over the lazy dog 1
+
+5-gram | counts
+--- | ---
+`the quick brown fox jumps` | 1
+`quick brown fox jumps over` | 1
+`brown fox jumps over the` | 1
+`fox jumps over the lazy` | 1
+`jumps over the lazy dog` | 1
 
 The ngram file is tab separated. The first part is the ngram itself, and second is its count. It's allowed that
 the input file contains mixed ngrams. It's possible to put 3-grams and 5-grams together in one input file. We also

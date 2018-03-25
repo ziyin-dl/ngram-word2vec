@@ -3,7 +3,7 @@ from termcolor import colored
 import os
 from read_credentials import readCredentials
 
-SSH, SCP = readCredentials("credentials.txt")
+SSH, SCP, user = readCredentials("credentials.txt")
 
 with open('good_hosts', 'r') as f:
     servers = [line.strip() for line in f.readlines()]
@@ -11,7 +11,7 @@ with open('good_hosts', 'r') as f:
 processes = []
 for i, server in enumerate(servers):
     subprocess.check_output("mkdir -p data_{}".format(i), shell=True)
-    proc = subprocess.Popen("{} -r balaji@{}:~/word2vec/data data_{}/data".format(SCP, server, i).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} -r {}@{}:~/word2vec/data data_{}/data".format(SCP, user, server, i).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -21,7 +21,7 @@ for server, proc in processes:
 
 processes = []
 for i, server in enumerate(servers):
-    proc = subprocess.Popen("{} -r balaji@{}:~/word2vec/question_result_eval data_{}/question_result_eval".format(SCP, server, i).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} -r {}@{}:~/word2vec/question_result_eval data_{}/question_result_eval".format(SCP, user, server, i).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -32,7 +32,7 @@ for server, proc in processes:
 
 processes = []
 for i, server in enumerate(servers):
-    proc = subprocess.Popen("{} -r balaji@{}:~/word2vec/similarity_result_eval data_{}/similarity_result_eval".format(SCP, server, i).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} -r {}@{}:~/word2vec/similarity_result_eval data_{}/similarity_result_eval".format(SCP, user, server, i).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

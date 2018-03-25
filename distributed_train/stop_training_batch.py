@@ -4,7 +4,7 @@ import os
 import cPickle as pickle
 from read_credentials import readCredentials
 
-SSH, SCP = readCredentials("credentials.txt")
+SSH, SCP, user = readCredentials("credentials.txt")
 
 with open('good_hosts', 'r') as f:
     servers = [line.strip() for line in f.readlines()]
@@ -13,7 +13,7 @@ with open('good_hosts', 'r') as f:
 # warning !! all python will be killed
 processes = []
 for server in servers:
-    proc = subprocess.Popen('{} balaji@{} killall python'.format(SSH, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen('{} {}@{} killall python'.format(SSH, user, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

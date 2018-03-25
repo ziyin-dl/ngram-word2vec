@@ -3,14 +3,14 @@ from termcolor import colored
 import os
 from read_credentials import readCredentials
 
-SSH, SCP = readCredentials("credentials.txt")
+SSH, SCP, user = readCredentials("credentials.txt")
 
 with open('good_hosts', 'r') as f:
     servers = [line.strip() for line in f.readlines()]
 
 processes = []
 for server in servers:
-    proc = subprocess.Popen("{} eval_run.sh balaji@{}:./word2vec/".format(SCP, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} eval_run.sh {}@{}:./word2vec/".format(SCP, user, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -20,7 +20,7 @@ for server, proc in processes:
 
 processes = []
 for server in servers:
-    proc = subprocess.Popen('{} balaji@{} "cd word2vec;bash eval_run.sh"'.format(SSH, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen('{} {}@{} "cd word2vec;bash eval_run.sh"'.format(SSH, user, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

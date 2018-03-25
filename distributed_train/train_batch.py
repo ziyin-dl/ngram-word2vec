@@ -5,7 +5,7 @@ import cPickle as pickle
 import argparse
 from read_credentials import readCredentials
 
-SSH, SCP = readCredentials("credentials.txt")
+SSH, SCP, user = readCredentials("credentials.txt")
 
 
 parser = argparse.ArgumentParser()
@@ -46,7 +46,7 @@ processes = []
 for server in servers:
     with open('tmpbash_{}'.format(server), 'w') as f:
         f.write(server_bash_scripts[server])
-    proc = subprocess.Popen("{} tmpbash_{} balaji@{}:./ngram/word2vec/run.sh".format(SCP, server, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} tmpbash_{} {}@{}:./ngram/word2vec/run.sh".format(SCP, server, user, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -58,7 +58,7 @@ subprocess.check_output("rm tmpbash_*", shell=True)
 # start training
 processes = []
 for server in servers:
-    proc = subprocess.Popen('{} balaji@{} "cd ./ngram/word2vec;bash run.sh"'.format(SSH, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen('{} {}@{} "cd ./ngram/word2vec;bash run.sh"'.format(SSH, user, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

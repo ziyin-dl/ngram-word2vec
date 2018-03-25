@@ -6,7 +6,7 @@ import collections
 import cPickle as pickle
 from read_credentials import readCredentials
 
-SSH, SCP = readCredentials("credentials.txt")
+SSH, SCP, user = readCredentials("credentials.txt")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--num_workers", type=int, default=1)
@@ -26,8 +26,8 @@ assert(len(servers) > 0)
 # only needs to distribute ngram data
 processes = []
 for server in servers:
-    proc = subprocess.Popen('{} balaji@{} "rm -rf ngram;mkdir -p ngram/data;mkdir -p ngram/scripts"'.format(
-        SSH, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen('{} {}@{} "rm -rf ngram;mkdir -p ngram/data;mkdir -p ngram/scripts"'.format(
+        SSH, user, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -50,8 +50,8 @@ with open("file_on_server.pkl", 'w') as f:
 processes = []
 for server in servers:
     print("copying {} to {}".format(file_lists[server], server))
-    proc = subprocess.Popen("{} {} balaji@{}:ngram/data".format(SCP,
-            " ".join(file_lists[server]), server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} {} {}@{}:ngram/data".format(SCP,
+            " ".join(file_lists[server]), user, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, file, proc));
 
 for server, file, proc in processes:
@@ -61,8 +61,8 @@ for server, file, proc in processes:
 
 processes = []
 for server in servers:
-    proc = subprocess.Popen("{} -r {} balaji@{}:ngram/".format(SCP,
-        args.word2vec_dir, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} -r {} {}@{}:ngram/".format(SCP,
+        args.word2vec_dir, user, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -72,8 +72,8 @@ for server, proc in processes:
 
 processes = []
 for server in servers:
-    proc = subprocess.Popen("{} {}/* balaji@{}:ngram/scripts".format(SCP,
-        args.script_dir, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen("{} {}/* {}@{}:ngram/scripts".format(SCP,
+        args.script_dir, user, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

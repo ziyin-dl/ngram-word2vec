@@ -1,3 +1,9 @@
+This is a skip-gram Word2Vec model that trains on ngram data. It is modified from the
+original tensorflow word2vec kernel, but the input takes a ngram file. Each line of the ngram input file
+is tab("\t") seperated, where the first part is the ngram, and the second part is the number of occurrences.
+The ngram file does not have to be of all the same size. It's valid, for example, to have mixed 3-grams and
+5-grams.
+
 This directory contains models for unsupervised training of word embeddings
 using the model described in:
 

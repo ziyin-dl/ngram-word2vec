@@ -25,7 +25,7 @@ included an example on how to use this on the Google ngram dataset
 
 * [Google Books Ngram](https://books.google.com/ngrams)
 
-![Alt text](.git/ngram.JPG?raw=true "Google Ngram")
+![Google Ngram](ngram.JPG?raw=true "Google Ngram")
 
 Here is a short overview of what is in this directory.
 

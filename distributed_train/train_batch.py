@@ -3,9 +3,8 @@ from termcolor import colored
 import os
 import cPickle as pickle
 import argparse
-from read_credentials import readCredentials
+from read_credentials import readCredentials, ssh, scp
 
-SSH, SCP, user = readCredentials("credentials.txt")
 
 
 parser = argparse.ArgumentParser()
@@ -15,8 +14,7 @@ parser.add_argument("--end", type=int, default=2009)
 args = parser.parse_args()
 
 
-with open('good_hosts', 'r') as f:
-    servers = [line.strip() for line in f.readlines()]
+servers = readCredentials("good_hosts")
 with open('file_on_server.pkl', 'r') as f:
     server_files = pickle.load(f)
 
@@ -37,16 +35,16 @@ mkdir train_log
 declare -a ngram_files=({})
 for data in "${{ngram_files[@]}}"; do
   echo "$data"
-  python word2vec_optimized.py --min_count 100 --num_neg_samples $neg_samples --concurrent_steps $threads --embedding_size $dim --train_data=../data/"$data"  --eval_data=word2vec/trunk/questions-words.txt   --save_path=./data/ > train_log/"$data"-output.log
+  python word2vec_optimized.py --min_count 100 --num_neg_samples $neg_samples --concurrent_steps $threads --embedding_size $dim --train_data=../data/"$data"  --eval_data=word2vec/trunk/questions-words.txt   --save_path=./data/ >train_log/"$data"-output.log
 done"""
 for server, files in server_files.iteritems():
     server_bash_scripts[server] = bash_script.format(' '.join(['"../data/{}"'.format(x) for x in files]))
 
 processes = []
-for server in servers:
+for server, user, passwd in servers:
     with open('tmpbash_{}'.format(server), 'w') as f:
         f.write(server_bash_scripts[server])
-    proc = subprocess.Popen("{} tmpbash_{} {}@{}:./ngram/word2vec/run.sh".format(SCP, server, user, server).split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(scp(server, user, passwd, "tmpbash_{}".format(server), "./ngram/word2vec/run.sh").split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -57,8 +55,8 @@ for server, proc in processes:
 subprocess.check_output("rm tmpbash_*", shell=True)
 # start training
 processes = []
-for server in servers:
-    proc = subprocess.Popen('{} {}@{} "cd ./ngram/word2vec;bash run.sh"'.format(SSH, user, server), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+for server, user, passwd in servers:
+    proc = subprocess.Popen('{} "cd ./ngram/word2vec;bash run.sh"'.format(ssh(server, user, passwd)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

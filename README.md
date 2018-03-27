@@ -24,9 +24,7 @@ the 5-grams contained are
 
 The ngram file is tab separated. The first part is the ngram itself, and second is its count. It's allowed that
 the input file contains mixed ngrams. It's possible to put 3-grams and 5-grams together in one input file. We also
-included an example on how to use this on the Google ngram dataset
-
-* [Google Books Ngram](https://books.google.com/ngrams)
+included an example on how to use this on the [Google Books Ngram Dataset](https://books.google.com/ngrams)
 
 ![Google Ngram](ngram.JPG?raw=true "Google Ngram")
 

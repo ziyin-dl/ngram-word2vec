@@ -5,6 +5,9 @@ the Google ngram data as an example, where the ngram files are processed and pro
 We will train word embeddings for every year between 1800 and 2009, so there will be 209 models to be 
 trained. It will be helpful to distribute the job on different machines.
 
+You will need TensofFlow on all of your slave machines. To install, run
+`pip install tensorflow==1.5`
+
 Here is a short overview of what is in this directory.
 
 Directory | What's in it?

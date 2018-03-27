@@ -9,7 +9,6 @@ from read_credentials import readCredentials, ssh, scp
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_dir", type=str, default="../scripts/data/ngram_data")
-parser.add_argument("--script_dir", type=str, default="../scripts")
 parser.add_argument("--word2vec_dir", type=str, default="../word2vec")
 parser.add_argument("--start", type=int, default=1800)
 parser.add_argument("--end", type=int, default=2009)
@@ -65,15 +64,4 @@ for server, proc in processes:
     output, err = proc.communicate()
     if proc.returncode != 0:
         print colored("{} failed to scp code".format(server), 'red')
-
-processes = []
-for server, user, passwd in servers:
-    proc = subprocess.Popen(scp(server, user, passwd, args.script_dir, "ngram/scripts"), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    processes.append((server, proc));
-
-for server, proc in processes:
-    output, err = proc.communicate()
-    if proc.returncode != 0:
-        print(colored("{} failed to scp scrpits".format(server), 'red'))
-        print(err)
 

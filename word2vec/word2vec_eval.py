@@ -154,7 +154,7 @@ class Word2Vec(object):
     self.save_vocab()
     self.question_accuracy = []
     self.similarity_accuracy = {}
-    self.test_set_files = ['wordsim353.csv', 'mturk771.csv', 'rg65.csv', 'mc91.csv']
+    self.test_set_files = ['wordsim353.csv', 'mturk771.csv']
     self.test_rows_list = {}
 
   def load_test_file(self, test_set_file):
@@ -483,7 +483,8 @@ def main(_):
     print("--train_data --eval_data and --save_path must be specified.")
     sys.exit(1)
   opts = Options()
-  filename = "model_{}.ckpt".format(opts.emb_dim)
+  model_name = (opts.train_data.split('/')[-1]).split('.')[0]
+  filename = "model_{}.ckpt".format(model_name)
   files = [f for f in listdir(opts.save_path) if isfile(join(opts.save_path, f))]
   for f in files:
     if filename in f:
@@ -499,9 +500,9 @@ def main(_):
     model.eval_sim()
     sp.check_output('mkdir -p question_result_eval', shell=True)
     sp.check_output('mkdir -p similarity_result_eval', shell=True)
-    with open('question_result_eval/result_question_{}.pkl'.format(opts.emb_dim), 'w') as f:
+    with open('question_result_eval/result_question_{}.pkl'.format(model_name), 'w') as f:
       pickle.dump(model.question_accuracy, f)
-    with open('similarity_result_eval/result_similarity_{}.pkl'.format(opts.emb_dim), 'w') as f:
+    with open('similarity_result_eval/result_similarity_{}.pkl'.format(model_name), 'w') as f:
       pickle.dump(model.similarity_accuracy, f)
     if FLAGS.interactive:
       # E.g.,
@@ -509,7 +510,7 @@ def main(_):
       # [1]: model.nearby([b'proton', b'elephant', b'maxwell'])
       _start_shell(locals())
     keys, embeds = model.get_embed()
-    with open("data/vectors{}.txt".format(opts.emb_dim), 'w') as f:
+    with open("data/vectors-{}.txt".format(model_name), 'w') as f:
       for i in range(len(keys)):
         f.write("{} ".format(keys[i]))
         f.write(" ".join(map(str, embeds[i,:].tolist())))

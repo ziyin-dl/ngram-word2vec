@@ -24,6 +24,7 @@ for server, files in server_files.iteritems():
 
 server_bash_scripts = {}
 bash_script = """#!/bin/bash
+trap "exit" INT
 # model training related
 neg_samples=4
 threads=8
@@ -35,7 +36,7 @@ mkdir train_log
 declare -a ngram_files=({})
 for data in "${{ngram_files[@]}}"; do
   echo "$data"
-  python word2vec_optimized.py --min_count 100 --num_neg_samples $neg_samples --concurrent_steps $threads --embedding_size $dim --train_data=../data/"$data"  --eval_data=word2vec/trunk/questions-words.txt   --save_path=./data/ >train_log/"$data"-output.log
+  python word2vec_optimized.py --min_count 100 --num_neg_samples $neg_samples --concurrent_steps $threads --embedding_size $dim --train_data=../data/"$data"  --eval_data=word2vec/trunk/questions-words.txt   --save_path=./data/ > ./train_log/"$data"-output.log
 done"""
 for server, files in server_files.iteritems():
     server_bash_scripts[server] = bash_script.format(' '.join(['"../data/{}"'.format(x) for x in files]))
@@ -44,7 +45,7 @@ processes = []
 for server, user, passwd in servers:
     with open('tmpbash_{}'.format(server), 'w') as f:
         f.write(server_bash_scripts[server])
-    proc = subprocess.Popen(scp(server, user, passwd, "tmpbash_{}".format(server), "./ngram/word2vec/run.sh").split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.popen(scp(server, user, passwd, "tmpbash_{}".format(server), "./ngram/word2vec/run.sh").split(), stdout=subprocess.pipe, stderr=subprocess.pipe)
     processes.append((server, proc));
 
 for server, proc in processes:
@@ -52,7 +53,7 @@ for server, proc in processes:
     if proc.returncode != 0:
         print colored("{} failed to scp script".format(server), 'red')
 
-subprocess.check_output("rm tmpbash_*", shell=True)
+subprocess.check_output("rm tmpbash_*", shell=true)
 # start training
 processes = []
 for server, user, passwd in servers:

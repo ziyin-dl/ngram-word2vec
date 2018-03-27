@@ -7,11 +7,10 @@ from read_credentials import readCredentials, ssh, scp
 servers = readCredentials("good_hosts")
 
 # stop training
-# warning !! all python will be killed
 processes = []
 for server, user, passwd in servers:
-    print('{} killall python'.format(ssh(server, user, passwd)))
-    proc = subprocess.Popen('{} killall python'.format(ssh(server, user, passwd)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print('{} killall bash'.format(ssh(server, user, passwd)))
+    proc = subprocess.Popen('{} killall bash)'.format(ssh(server, user, passwd)), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     processes.append((server, proc));
 
 for server, proc in processes:

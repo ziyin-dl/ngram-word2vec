@@ -28,7 +28,7 @@ included an example on how to use this on the [Google Books Ngram Dataset](https
 
 ![Google Ngram](ngram.JPG?raw=true "Google Ngram")
 
-Here is a short overview of what is in this directory.
+We have a pre-trained set of vectors for years between 1800-2008, which can be found [here](https://drive.google.com/file/d/1TDBCLHzmt8yu2LVs6Ragl_wP8tvkFLZ-/view?usp=sharing). We threshold the word min_count to be 100. Here is a short overview of what is in this directory.
 
 Directory | What's in it?
 --- | ---

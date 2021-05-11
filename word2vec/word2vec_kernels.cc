@@ -337,7 +337,6 @@ class SkipgramWord2vecOp : public OpKernel {
     freq.flat<int32>()(kUnkId) = corpus_size_ - total_counted;
     word_ = word;
     freq_ = freq;
-    corpus_.reserve(corpus_size_);
     input = data;
     for (auto it: corpus_raw) {
       corpus_sep_by_sentence_.emplace_back(std::vector<int>());
